@@ -15,7 +15,7 @@ class MainView:
         self.frame_dash = ttk.Frame(self.notebook)
         self.frame_industrias = ttk.Frame(self.notebook)
 
-        self.notebook.add(self.frame_dash, text="Dashboard")
+        # self.notebook.add(self.frame_dash, text="Dashboard")
         self.notebook.add(self.frame_industrias, text="Indústrias")
 
         # Injeta o frame limpo na classe que vai desenhar a aba de industrias
