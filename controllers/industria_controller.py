@@ -19,7 +19,11 @@ class IndustriaController:
         if not nome:
             self.view.mostrar_mensagem("Erro", "O nome da indústria é obrigatório.", "erro")
             return
-
+        
+        if self.model.nome_ja_existe(nome, self.id_em_edicao):
+            self.view.mostrar_mensagem("Erro", f"Já existe uma indústria com o nome '{nome}'.", "erro")
+            return
+        
         if self.id_em_edicao:
             self.model.atualizar(self.id_em_edicao, nome)
             self.view.mostrar_mensagem("Sucesso", f"Indústria atualizada para '{nome}'!")
@@ -45,6 +49,16 @@ class IndustriaController:
         self.view.btn_cancelar.pack_forget()
 
     def excluir(self, ind_id, nome_ind):
+
+        # Bloqueia exclusão se estiver em uso por promotores
+        if self.model.tem_vinculos_promotores(ind_id):
+            self.view.mostrar_mensagem(
+                "Operação Bloqueada", 
+                f"A indústria '{nome_ind}' não pode ser excluída porque possui promotores associados a ela.", 
+                "erro"
+            )
+            return
+        
         if not tk.messagebox.askyesno("Confirmar", f"Deseja excluir a indústria '{nome_ind}'?"):
             return
 
