@@ -16,8 +16,13 @@ class TabIndustria:
         
         frame_input = ttk.Frame(frame_form)
         frame_input.pack(fill=tk.X, pady=(0, 10))
+
+        # Variável rastreável do Tkinter
+        self.var_nome = tk.StringVar()
+        self.var_nome.trace_add("write", lambda *args: self.forcar_maiuscula(self.var_nome, self.entrada_nome))
         
-        self.entrada_nome = ttk.Entry(frame_input)
+        # Entry recebe a textvariable
+        self.entrada_nome = ttk.Entry(frame_input, textvariable=self.var_nome)
         self.entrada_nome.pack(fill=tk.X, expand=True)
 
         frame_botoes_form = ttk.Frame(frame_form)
@@ -84,6 +89,12 @@ class TabIndustria:
 
         ttk.Separator(self.scrollable_frame, orient='horizontal').pack(fill=tk.X, pady=2)
 
+    def forcar_maiuscula(self, variavel, widget):
+        # Salva a posição do cursor para ele não pular para o final ao editar no meio do texto
+        posicao = widget.index(tk.INSERT)
+        variavel.set(variavel.get().upper())
+        widget.icursor(posicao)
+        
     def mostrar_mensagem(self, titulo, mensagem, tipo="info"):
         if tipo == "erro":
             messagebox.showerror(titulo, mensagem)

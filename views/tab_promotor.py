@@ -3,12 +3,6 @@ from tkinter import ttk, messagebox
 
 class TabPromotor:
     def __init__(self, parent_frame):
-
-        LARGURA_NOME = 200
-        LARGURA_SETOR = 150
-        LARGURA_ACOES = 10
-        ALTURA_LINHA = 25
-        
         self.parent = parent_frame
         
         # --- Cadastro ---
@@ -20,11 +14,15 @@ class TabPromotor:
         frame_inputs.pack(fill=tk.X, pady=(0, 10))
         
         ttk.Label(frame_inputs, text="Nome:").grid(row=0, column=0, sticky=tk.W, padx=5)
-        self.entrada_nome = ttk.Entry(frame_inputs, width=30)
+        self.var_nome = tk.StringVar()
+        self.var_nome.trace_add("write", lambda *args: self.forcar_maiuscula(self.var_nome, self.entrada_nome))
+        self.entrada_nome = ttk.Entry(frame_inputs, width=30, textvariable=self.var_nome)
         self.entrada_nome.grid(row=1, column=0, padx=5, sticky=tk.W)
 
         ttk.Label(frame_inputs, text="Setor (Opcional):").grid(row=0, column=1, sticky=tk.W, padx=5)
-        self.entrada_setor = ttk.Entry(frame_inputs, width=30)
+        self.var_setor = tk.StringVar()
+        self.var_setor.trace_add("write", lambda *args: self.forcar_maiuscula(self.var_setor, self.entrada_setor))
+        self.entrada_setor = ttk.Entry(frame_inputs, width=80, textvariable=self.var_setor)
         self.entrada_setor.grid(row=1, column=1, padx=5, sticky=tk.W)
 
         # Checkboxes Dinâmicos
@@ -126,6 +124,12 @@ class TabPromotor:
                 col = 0
                 row += 1
 
+    def forcar_maiuscula(self, variavel, widget):
+        posicao = widget.index(tk.INSERT)
+        variavel.set(variavel.get().upper())
+        widget.icursor(posicao)
+
+        
     def mostrar_mensagem(self, titulo, mensagem, tipo="info"):
         if tipo == "erro":
             messagebox.showerror(titulo, mensagem)
