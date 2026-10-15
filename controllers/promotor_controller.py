@@ -88,11 +88,12 @@ class PromotorController:
         for p in promotores:
             nomes_inds = [ind[1] for ind in p['industrias']]
             inds_str = ", ".join(nomes_inds) if nomes_inds else "—"
+            setor = p['setor'] if p['setor'] else "—"
             
             self.view.adicionar_linha(
                 id_prom=p['id'],
                 nome=p['nome'],
-                setor=p['setor'],
+                setor=setor,
                 inds_str=inds_str,
                 cmd_editar=lambda idp=p['id'], n=p['nome'], s=p['setor'], inds=p['industrias']: self.preparar_edicao(idp, n, s, inds),
                 cmd_excluir=lambda idp=p['id'], n=p['nome']: self.excluir(idp, n)

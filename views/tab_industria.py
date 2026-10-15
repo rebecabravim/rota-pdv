@@ -3,6 +3,9 @@ from tkinter import ttk, messagebox
 
 class TabIndustria:
     def __init__(self, parent_frame):
+
+        LARGURA_ACOES = 10
+
         self.parent = parent_frame
         
         # --- Card Superior: Cadastro ---
@@ -31,9 +34,8 @@ class TabIndustria:
         # Cabeçalho da tabela
         header = ttk.Frame(frame_lista)
         header.pack(fill=tk.X, pady=(0, 5))
-        # ttk.Label(header, text="ID", font=("", 9, "bold"), width=5).pack(side=tk.LEFT)
         ttk.Label(header, text="NOME", font=("", 9, "bold")).pack(side=tk.LEFT, fill=tk.X, expand=True)
-        ttk.Label(header, text="AÇÕES", font=("", 9, "bold"), width=20).pack(side=tk.RIGHT)
+        ttk.Label(header, text="AÇÕES", font=("", 9, "bold"), width=LARGURA_ACOES).pack(side=tk.RIGHT)
 
         ttk.Separator(frame_lista, orient='horizontal').pack(fill=tk.X, pady=5)
 
@@ -60,15 +62,17 @@ class TabIndustria:
             widget.destroy()
 
     def adicionar_industria(self, id_ind, nome, cmd_editar, cmd_excluir):
+
+        LARGURA_ACOES = 10
+
         # Cria uma "linha" (Frame)
         linha = ttk.Frame(self.scrollable_frame)
         linha.pack(fill=tk.X, pady=2)
 
         # Colunas (Labels e Botões)
-        # ttk.Label(linha, text=str(id_ind), width=5).pack(side=tk.LEFT)
         ttk.Label(linha, text=nome).pack(side=tk.LEFT, fill=tk.X, expand=True)
 
-        frame_acoes = ttk.Frame(linha, width=20)
+        frame_acoes = ttk.Frame(linha, width=LARGURA_ACOES)
         frame_acoes.pack(side=tk.RIGHT)
 
         # Os botões NA LINHA e recebem os comandos específicos desta ID

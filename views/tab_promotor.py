@@ -3,6 +3,12 @@ from tkinter import ttk, messagebox
 
 class TabPromotor:
     def __init__(self, parent_frame):
+
+        LARGURA_NOME = 200
+        LARGURA_SETOR = 150
+        LARGURA_ACOES = 10
+        ALTURA_LINHA = 25
+        
         self.parent = parent_frame
         
         # --- Cadastro ---
@@ -38,13 +44,27 @@ class TabPromotor:
         # --- Lista Customizada ---
         frame_lista = ttk.LabelFrame(self.parent, text="Lista", padding=15)
         frame_lista.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
-
+        
         header = ttk.Frame(frame_lista)
         header.pack(fill=tk.X, pady=(0, 5))
-        ttk.Label(header, text="NOME", font=("", 9, "bold"), width=20).pack(side=tk.LEFT)
-        ttk.Label(header, text="SETOR", font=("", 9, "bold"), width=15).pack(side=tk.LEFT)
-        ttk.Label(header, text="INDÚSTRIAS", font=("", 9, "bold")).pack(side=tk.LEFT, fill=tk.X, expand=True)
-        ttk.Label(header, text="AÇÕES", font=("", 9, "bold"), width=15).pack(side=tk.RIGHT)
+
+        # NOME
+        frame_head_nome = ttk.Frame(header, width=LARGURA_NOME, height=ALTURA_LINHA)
+        frame_head_nome.pack_propagate(False)
+        frame_head_nome.pack(side=tk.LEFT)
+        ttk.Label(frame_head_nome, text="NOME", font=("", 9, "bold"), anchor=tk.W).pack(fill=tk.BOTH, expand=True)
+
+        # SETOR
+        frame_head_setor = ttk.Frame(header, width=LARGURA_SETOR, height=ALTURA_LINHA)
+        frame_head_setor.pack_propagate(False)
+        frame_head_setor.pack(side=tk.LEFT)
+        ttk.Label(frame_head_setor, text="SETOR", font=("", 9, "bold"), anchor=tk.W).pack(fill=tk.BOTH, expand=True)
+
+        # INDÚSTRIAS (Expande para ocupar o resto)
+        ttk.Label(header, text="INDÚSTRIAS", font=("", 9, "bold"), anchor=tk.W).pack(side=tk.LEFT, fill=tk.X, expand=True)
+        
+        # AÇÕES
+        ttk.Label(header, text="AÇÕES", font=("", 9, "bold"), width=LARGURA_ACOES).pack(side=tk.RIGHT)
 
         ttk.Separator(frame_lista, orient='horizontal').pack(fill=tk.X, pady=5)
 
@@ -63,14 +83,34 @@ class TabPromotor:
             widget.destroy()
 
     def adicionar_linha(self, id_prom, nome, setor, inds_str, cmd_editar, cmd_excluir):
+
+        LARGURA_NOME = 200
+        LARGURA_SETOR = 150
+        LARGURA_ACOES = 10
+        ALTURA_LINHA = 25
+
         linha = ttk.Frame(self.scrollable_frame)
         linha.pack(fill=tk.X, pady=2)
 
-        ttk.Label(linha, text=nome, width=20).pack(side=tk.LEFT)
-        ttk.Label(linha, text=setor, width=15).pack(side=tk.LEFT)
-        ttk.Label(linha, text=inds_str).pack(side=tk.LEFT, fill=tk.X, expand=True)
+        # NOME
+        frame_nome = ttk.Frame(linha, width=LARGURA_NOME, height=ALTURA_LINHA)
+        frame_nome.pack_propagate(False)
+        frame_nome.pack(side=tk.LEFT)
+        ttk.Label(frame_nome, text=nome, anchor=tk.W).pack(fill=tk.BOTH, expand=True)
 
-        frame_acoes = ttk.Frame(linha, width=15)
+        # SETOR
+        frame_setor = ttk.Frame(linha, width=LARGURA_SETOR, height=ALTURA_LINHA)
+        frame_setor.pack_propagate(False)
+        frame_setor.pack(side=tk.LEFT)
+        ttk.Label(frame_setor, text=setor, anchor=tk.W).pack(fill=tk.BOTH, expand=True)
+
+        # INDÚSTRIAS (Como esta coluna é expansível, quebra dinamicamente)
+        lbl_inds = ttk.Label(linha, text=inds_str, anchor=tk.W)
+        lbl_inds.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(0, 10))
+        # O evento <Configure> atualiza a quebra de linha sempre que a janela mudar de tamanho
+        lbl_inds.bind('<Configure>', lambda e: lbl_inds.config(wraplength=lbl_inds.winfo_width() - 10))
+
+        frame_acoes = ttk.Frame(linha, width=LARGURA_ACOES)
         frame_acoes.pack(side=tk.RIGHT)
 
         ttk.Button(frame_acoes, text="Editar", command=cmd_editar).pack(side=tk.LEFT, padx=2)
