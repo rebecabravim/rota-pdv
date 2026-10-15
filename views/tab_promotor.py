@@ -48,23 +48,16 @@ class TabPromotor:
         header = ttk.Frame(frame_lista)
         header.pack(fill=tk.X, pady=(0, 5))
 
-        # NOME
-        frame_head_nome = ttk.Frame(header, width=LARGURA_NOME, height=ALTURA_LINHA)
-        frame_head_nome.pack_propagate(False)
-        frame_head_nome.pack(side=tk.LEFT)
-        ttk.Label(frame_head_nome, text="NOME", font=("", 9, "bold"), anchor=tk.W).pack(fill=tk.BOTH, expand=True)
+        # Configura as larguras fixas em pixels das colunas usando grid
+        header.grid_columnconfigure(0, minsize=200, weight=0) # Coluna 0: NOME
+        header.grid_columnconfigure(1, minsize=150, weight=0) # Coluna 1: SETOR
+        header.grid_columnconfigure(2, weight=1)              # Coluna 2: INDÚSTRIAS (Expande)
+        header.grid_columnconfigure(3, minsize=150, weight=0) # Coluna 3: AÇÕES
 
-        # SETOR
-        frame_head_setor = ttk.Frame(header, width=LARGURA_SETOR, height=ALTURA_LINHA)
-        frame_head_setor.pack_propagate(False)
-        frame_head_setor.pack(side=tk.LEFT)
-        ttk.Label(frame_head_setor, text="SETOR", font=("", 9, "bold"), anchor=tk.W).pack(fill=tk.BOTH, expand=True)
-
-        # INDÚSTRIAS (Expande para ocupar o resto)
-        ttk.Label(header, text="INDÚSTRIAS", font=("", 9, "bold"), anchor=tk.W).pack(side=tk.LEFT, fill=tk.X, expand=True)
-        
-        # AÇÕES
-        ttk.Label(header, text="AÇÕES", font=("", 9, "bold"), width=LARGURA_ACOES).pack(side=tk.RIGHT)
+        ttk.Label(header, text="NOME", font=("", 9, "bold"), anchor=tk.W).grid(row=0, column=0, sticky="ew")
+        ttk.Label(header, text="SETOR", font=("", 9, "bold"), anchor=tk.W).grid(row=0, column=1, sticky="ew")
+        ttk.Label(header, text="INDÚSTRIAS", font=("", 9, "bold"), anchor=tk.W).grid(row=0, column=2, sticky="ew")
+        ttk.Label(header, text="AÇÕES", font=("", 9, "bold"), anchor=tk.E).grid(row=0, column=3, sticky="ew", padx=(0, 25))
 
         ttk.Separator(frame_lista, orient='horizontal').pack(fill=tk.X, pady=5)
 
@@ -84,35 +77,29 @@ class TabPromotor:
 
     def adicionar_linha(self, id_prom, nome, setor, inds_str, cmd_editar, cmd_excluir):
 
-        LARGURA_NOME = 200
-        LARGURA_SETOR = 150
-        LARGURA_ACOES = 10
-        ALTURA_LINHA = 25
-
         linha = ttk.Frame(self.scrollable_frame)
         linha.pack(fill=tk.X, pady=2)
 
-        # NOME
-        frame_nome = ttk.Frame(linha, width=LARGURA_NOME, height=ALTURA_LINHA)
-        frame_nome.pack_propagate(False)
-        frame_nome.pack(side=tk.LEFT)
-        ttk.Label(frame_nome, text=nome, anchor=tk.W).pack(fill=tk.BOTH, expand=True)
+        # Mesma regra do cabeçalho: define as larguras das colunas
+        linha.grid_columnconfigure(0, minsize=200, weight=0)
+        linha.grid_columnconfigure(1, minsize=150, weight=0)
+        linha.grid_columnconfigure(2, weight=1)
+        linha.grid_columnconfigure(3, minsize=150, weight=0)
 
-        # SETOR
-        frame_setor = ttk.Frame(linha, width=LARGURA_SETOR, height=ALTURA_LINHA)
-        frame_setor.pack_propagate(False)
-        frame_setor.pack(side=tk.LEFT)
-        ttk.Label(frame_setor, text=setor, anchor=tk.W).pack(fill=tk.BOTH, expand=True)
+        # NOME (wraplength = 200 - 10 de margem = 190)
+        ttk.Label(linha, text=nome, anchor=tk.W, wraplength=190).grid(row=0, column=0, sticky="ew")
 
-        # INDÚSTRIAS (Como esta coluna é expansível, quebra dinamicamente)
+        # SETOR (wraplength = 150 - 10 de margem = 140)
+        ttk.Label(linha, text=setor, anchor=tk.W, wraplength=140).grid(row=0, column=1, sticky="ew")
+
+        # INDÚSTRIAS (Expansível)
         lbl_inds = ttk.Label(linha, text=inds_str, anchor=tk.W)
-        lbl_inds.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=(0, 10))
-        # O evento <Configure> atualiza a quebra de linha sempre que a janela mudar de tamanho
+        lbl_inds.grid(row=0, column=2, sticky="ew", padx=(0, 10))
         lbl_inds.bind('<Configure>', lambda e: lbl_inds.config(wraplength=lbl_inds.winfo_width() - 10))
 
-        frame_acoes = ttk.Frame(linha, width=LARGURA_ACOES)
-        frame_acoes.pack(side=tk.RIGHT)
-
+        # AÇÕES (Usamos um Frame aqui só para colocar os dois botões lado a lado com pack)
+        frame_acoes = ttk.Frame(linha)
+        frame_acoes.grid(row=0, column=3, sticky="e")
         ttk.Button(frame_acoes, text="Editar", command=cmd_editar).pack(side=tk.LEFT, padx=2)
         ttk.Button(frame_acoes, text="Excluir", command=cmd_excluir).pack(side=tk.LEFT, padx=2)
 
