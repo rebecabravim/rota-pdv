@@ -10,8 +10,8 @@ class PromotorController:
         
         self.id_em_edicao = None
 
-        self.view.btn_salvar.config(command=self.salvar)
-        self.view.btn_cancelar.config(command=self.cancelar_edicao)
+        self.view.btn_salvar.configure(command=self.salvar)
+        self.view.btn_cancelar.configure(command=self.cancelar_edicao)
 
         self.atualizar_tabela()
         self.carregar_checkboxes()
@@ -58,7 +58,7 @@ class PromotorController:
         ids_selecionados = [ind[0] for ind in industrias_obj]
         self.carregar_checkboxes(ids_selecionados)
 
-        self.view.btn_salvar.config(text="Salvar Alteração")
+        self.view.btn_salvar.configure(text="Salvar")
         self.view.btn_cancelar.pack(side=tk.LEFT)
 
     def cancelar_edicao(self):
@@ -67,7 +67,7 @@ class PromotorController:
         self.view.entrada_setor.delete(0, 'end')
         self.carregar_checkboxes()
         
-        self.view.btn_salvar.config(text="Salvar")
+        self.view.btn_salvar.configure(text="Salvar")
         self.view.btn_cancelar.pack_forget()
 
     def excluir(self, prom_id, nome):

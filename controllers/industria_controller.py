@@ -8,8 +8,8 @@ class IndustriaController:
         
         self.id_em_edicao = None
 
-        self.view.btn_salvar.config(command=self.salvar)
-        self.view.btn_cancelar.config(command=self.cancelar_edicao)
+        self.view.btn_salvar.configure(command=self.salvar)
+        self.view.btn_cancelar.configure(command=self.cancelar_edicao)
 
         self.atualizar_tabela()
 
@@ -39,13 +39,13 @@ class IndustriaController:
         
         self.view.entrada_nome.delete(0, 'end')
         self.view.entrada_nome.insert(0, nome)
-        self.view.btn_salvar.config(text="Salvar Alteração")
+        self.view.btn_salvar.configure(text="Salvar")
         self.view.btn_cancelar.pack(side=tk.LEFT)
 
     def cancelar_edicao(self):
         self.id_em_edicao = None
         self.view.entrada_nome.delete(0, 'end')
-        self.view.btn_salvar.config(text="Salvar")
+        self.view.btn_salvar.configure(text="Salvar")
         self.view.btn_cancelar.pack_forget()
 
     def excluir(self, ind_id, nome_ind):
