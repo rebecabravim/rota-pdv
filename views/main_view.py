@@ -2,6 +2,8 @@ import customtkinter as ctk
 from PIL import Image
 from views.tab_industria import TabIndustria
 from views.tab_promotor import TabPromotor
+from views.styles import Cores
+
 
 class MainView:
     def __init__(self, root):
@@ -11,9 +13,6 @@ class MainView:
 
         ctk.set_appearance_mode("light")
         self.root.configure(fg_color="#f8f9fa")
-        
-        self.COR_AZUL_ESCURO = "#013f6f"
-        self.COR_AZUL_MEDIO = "#2a6db8"
 
         # ==========================================
         # 1. NAVBAR (CABEÇALHO ESTILO WEB)
@@ -34,7 +33,7 @@ class MainView:
 
         lbl_title = ctk.CTkLabel(
             self.navbar, text="RotaPDV", 
-            font=ctk.CTkFont(size=18, weight="bold"), text_color=self.COR_AZUL_MEDIO
+            font=ctk.CTkFont(size=18, weight="bold"), text_color=Cores.AZUL_MEDIO
         )
         lbl_title.pack(side="left")
 
@@ -45,21 +44,21 @@ class MainView:
         # Botões do Menu (Sem fundo, parecem links HTML)
         self.btn_nav_ind = ctk.CTkButton(
             frame_menus, text="Indústrias", fg_color="transparent", hover_color="#f8f9fa",
-            text_color=self.COR_AZUL_ESCURO, font=ctk.CTkFont(size=13, weight="normal"), width=80,
+            text_color=Cores.AZUL_ESCURO, font=ctk.CTkFont(size=13, weight="normal"), width=80,
             command=lambda: self.selecionar_aba("Indústrias")
         )
         self.btn_nav_ind.pack(side="left", padx=10)
 
         self.btn_nav_prom = ctk.CTkButton(
             frame_menus, text="Promotores", fg_color="transparent", hover_color="#f8f9fa",
-            text_color=self.COR_AZUL_ESCURO, font=ctk.CTkFont(size=13, weight="normal"), width=80,
+            text_color=Cores.AZUL_ESCURO, font=ctk.CTkFont(size=13, weight="normal"), width=80,
             command=lambda: self.selecionar_aba("Promotores")
         )
         self.btn_nav_prom.pack(side="left", padx=10)
 
         # self.btn_nav_lojas = ctk.CTkButton(
         #     frame_menus, text="Lojas", fg_color="transparent", hover_color="#f8f9fa",
-        #     text_color=self.COR_AZUL_ESCURO, font=ctk.CTkFont(size=13, weight="normal"), width=80,
+        #     text_color=Cores.AZUL_ESCURO, font=ctk.CTkFont(size=13, weight="normal"), width=80,
         #     command=lambda: self.selecionar_aba("Lojas") # Descomente quando criar a TabLojas
         # )
         # self.btn_nav_lojas.pack(side="left", padx=10)
@@ -93,20 +92,20 @@ class MainView:
 
         # 2. Reseta a cor e fonte de todos os botões do menu
         fonte_normal = ctk.CTkFont(size=13, weight="normal")
-        self.btn_nav_ind.configure(text_color=self.COR_AZUL_ESCURO, font=fonte_normal)
-        self.btn_nav_prom.configure(text_color=self.COR_AZUL_ESCURO, font=fonte_normal)
-        # self.btn_nav_lojas.configure(text_color=self.COR_AZUL_ESCURO, font=fonte_normal)
+        self.btn_nav_ind.configure(text_color=Cores.AZUL_ESCURO, font=fonte_normal)
+        self.btn_nav_prom.configure(text_color=Cores.AZUL_ESCURO, font=fonte_normal)
+        # self.btn_nav_lojas.configure(text_color=Cores.AZUL_ESCURO, font=fonte_normal)
 
         # 3. Exibe a tela correta e pinta o botão de Azul Médio e Negrito
         fonte_negrito = ctk.CTkFont(size=13, weight="bold")
         
         if nome_aba == "Indústrias":
             self.frame_industrias.pack(fill="both", expand=True)
-            self.btn_nav_ind.configure(text_color=self.COR_AZUL_MEDIO, font=fonte_negrito)
+            self.btn_nav_ind.configure(text_color=Cores.AZUL_MEDIO, font=fonte_negrito)
             
         elif nome_aba == "Promotores":
             self.frame_promotores.pack(fill="both", expand=True)
-            self.btn_nav_prom.configure(text_color=self.COR_AZUL_MEDIO, font=fonte_negrito)
+            self.btn_nav_prom.configure(text_color=Cores.AZUL_MEDIO, font=fonte_negrito)
 
         # 4. Avisa o AppController (para recarregar banco de dados, se necessário)
         if hasattr(self, 'tab_command'):
