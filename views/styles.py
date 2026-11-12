@@ -1,4 +1,4 @@
-# tema.py
+# styles.py
 
 class Cores:
     # Azuis (Tema Principal)
