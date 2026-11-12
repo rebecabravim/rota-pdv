@@ -2,12 +2,20 @@ import customtkinter as ctk
 import tkinter as tk
 from tkinter import messagebox
 from views.utils import WrappableLabel
-from views.styles import Cores 
+from views.styles import Cores  
 
 
 class TabLoja:
     def __init__(self, parent_frame):
         self.parent = parent_frame
+
+        # Variáveis para garantir que Cabeçalho e Linhas têm a mesma largura exata
+        self.LARGURA_LOJA = 180
+        self.LARGURA_CIDADE = 130
+        self.LARGURA_INTERVALO = 110
+        self.LARGURA_PROMOTORES = 450
+        self.LARGURA_ACOES = 120
+        self.PADDING_ACOES = 20
 
         # --- Card Superior: Formulário de Cadastro ---
         frame_form = ctk.CTkFrame(self.parent, fg_color=Cores.BRANCO, corner_radius=6)
@@ -52,11 +60,16 @@ class TabLoja:
         )
         self.entrada_endereco.grid(row=1, column=2, padx=(0, 8), sticky="w")
 
-        # INTERVALO (DIAS)
+        # INTERVALO (DIAS) COM VALIDAÇÃO NUMÉRICA
         ctk.CTkLabel(frame_inputs, text="Intervalo (dias):", text_color=Cores.PRETO, font=ctk.CTkFont(size=11)).grid(row=0, column=3, sticky="w", padx=2)
+        
+        # Cria a regra de validação que o Tkinter entende
+        validacao_numerica = (self.parent.register(self.validar_numero), '%P')
+        
         self.entrada_intervalo = ctk.CTkEntry(
             frame_inputs, width=90, height=30, 
-            fg_color=Cores.BRANCO, border_color=Cores.CINZA_BORDA, border_width=1, corner_radius=5, text_color=Cores.TEXTO_ESCURO
+            fg_color=Cores.BRANCO, border_color=Cores.CINZA_BORDA, border_width=1, corner_radius=5, text_color=Cores.TEXTO_ESCURO,
+            validate="key", validatecommand=validacao_numerica
         )
         self.entrada_intervalo.insert(0, "7")
         self.entrada_intervalo.grid(row=1, column=3, sticky="w")
@@ -89,7 +102,6 @@ class TabLoja:
             fg_color=Cores.AZUL_CLARO, hover_color=Cores.AZUL_HOVER_CLARO, 
             text_color=Cores.AZUL_ESCURO, font=ctk.CTkFont(size=11, weight="bold")
         )
-        # Oculto por padrão
 
         # --- Card Inferior: Tabela de Lojas ---
         frame_lista = ctk.CTkFrame(self.parent, fg_color=Cores.BRANCO, corner_radius=6)
@@ -97,29 +109,37 @@ class TabLoja:
         
         ctk.CTkLabel(frame_lista, text="Lista de Lojas", font=ctk.CTkFont(size=13, weight="bold"), text_color=Cores.AZUL_ESCURO).pack(anchor="w", padx=10, pady=(5, 2))
 
-        header = ctk.CTkFrame(frame_lista, fg_color=Cores.AZUL_CLARO, corner_radius=4, height=26)
-        header.pack(fill="x", padx=10, pady=(0, 2))
+        self.header = ctk.CTkFrame(frame_lista, fg_color=Cores.AZUL_CLARO, corner_radius=4, height=26)
+        self.header.pack(fill="x", padx=10, pady=(0, 2))
 
-        # Estrutura Rígida de Colunas
-        header.grid_columnconfigure(0, minsize=160, weight=0) # LOJA
-        header.grid_columnconfigure(1, minsize=110, weight=0) # CIDADE
-        header.grid_columnconfigure(2, minsize=80, weight=0)  # INTERVALO
-        header.grid_columnconfigure(3, weight=1)              # PROMOTORES
-        header.grid_columnconfigure(4, weight=1)              # INDÚSTRIAS
-        header.grid_columnconfigure(5, minsize=120, weight=0) # AÇÕES
+        # Estrutura Rígida de Colunas (Grid sincronizado)
+        self.header.grid_columnconfigure(0, minsize=self.LARGURA_LOJA, weight=0)
+        self.header.grid_columnconfigure(1, minsize=self.LARGURA_CIDADE, weight=0)
+        self.header.grid_columnconfigure(2, minsize=self.LARGURA_INTERVALO, weight=0)
+        self.header.grid_columnconfigure(3, minsize=self.LARGURA_PROMOTORES, weight=0)
+        self.header.grid_columnconfigure(4, weight=1) # Indústrias preenche espaço
+        self.header.grid_columnconfigure(5, minsize=self.LARGURA_ACOES, weight=0)
 
-        ctk.CTkLabel(header, text="LOJA", font=ctk.CTkFont(size=11, weight="bold"), text_color=Cores.AZUL_ESCURO).grid(row=0, column=0, sticky="w", padx=10, pady=2)
-        ctk.CTkLabel(header, text="CIDADE", font=ctk.CTkFont(size=11, weight="bold"), text_color=Cores.AZUL_ESCURO).grid(row=0, column=1, sticky="w", padx=10, pady=2)
-        ctk.CTkLabel(header, text="INTERVALO", font=ctk.CTkFont(size=11, weight="bold"), text_color=Cores.AZUL_ESCURO).grid(row=0, column=2, sticky="w", padx=10, pady=2)
-        ctk.CTkLabel(header, text="PROMOTORES", font=ctk.CTkFont(size=11, weight="bold"), text_color=Cores.AZUL_ESCURO).grid(row=0, column=3, sticky="w", padx=10, pady=2)
-        ctk.CTkLabel(header, text="INDÚSTRIAS", font=ctk.CTkFont(size=11, weight="bold"), text_color=Cores.AZUL_ESCURO).grid(row=0, column=4, sticky="w", padx=10, pady=2)
-        ctk.CTkLabel(header, text="AÇÕES", font=ctk.CTkFont(size=11, weight="bold"), text_color=Cores.AZUL_ESCURO).grid(row=0, column=5, sticky="e", padx=15, pady=2)
+        # Todos com padx=5 para manter o texto alinhado exatamente igual às linhas de baixo
+        ctk.CTkLabel(self.header, text="LOJA", font=ctk.CTkFont(size=11, weight="bold"), text_color=Cores.AZUL_ESCURO).grid(row=0, column=0, sticky="w", padx=5, pady=2)
+        ctk.CTkLabel(self.header, text="CIDADE", font=ctk.CTkFont(size=11, weight="bold"), text_color=Cores.AZUL_ESCURO).grid(row=0, column=1, sticky="w", padx=5, pady=2)
+        ctk.CTkLabel(self.header, text="INTERVALO", font=ctk.CTkFont(size=11, weight="bold"), text_color=Cores.AZUL_ESCURO).grid(row=0, column=2, sticky="w", padx=5, pady=2)
+        ctk.CTkLabel(self.header, text="PROMOTORES", font=ctk.CTkFont(size=11, weight="bold"), text_color=Cores.AZUL_ESCURO).grid(row=0, column=3, sticky="w", padx=5, pady=2)
+        ctk.CTkLabel(self.header, text="INDÚSTRIAS", font=ctk.CTkFont(size=11, weight="bold"), text_color=Cores.AZUL_ESCURO).grid(row=0, column=4, sticky="w", padx=5, pady=2)
+        ctk.CTkLabel(self.header, text="AÇÕES", font=ctk.CTkFont(size=11, weight="bold"), text_color=Cores.AZUL_ESCURO).grid(row=0, column=5, sticky="e", padx=self.PADDING_ACOES, pady=2)
 
         self.scrollable_frame = ctk.CTkScrollableFrame(
             frame_lista, fg_color=Cores.TRANSPARENTE, 
             scrollbar_button_color=Cores.CINZA_SCROLL, scrollbar_button_hover_color=Cores.AZUL_CLARO
         )
         self.scrollable_frame.pack(fill="both", expand=True, padx=5, pady=(0, 5))
+
+    # --- FUNÇÃO DE VALIDAÇÃO NUMÉRICA ---
+    def validar_numero(self, valor_digitado):
+        # Permite apagar tudo (string vazia) ou permite se a string for apenas números
+        if valor_digitado == "" or valor_digitado.isdigit():
+            return True
+        return False
 
     def desenhar_checkboxes_promotores(self, promotores, selecionados=None):
         selecionados = selecionados or []
@@ -129,7 +149,6 @@ class TabLoja:
         self.check_prom_vars.clear()
         col, row = 0, 0
         for p in promotores:
-            # Suporta dicionário/Row (p['id']) ou tupla (p[0])
             p_id = p['id'] if isinstance(p, dict) or hasattr(p, 'keys') else p[0]
             nome = p['nome'] if isinstance(p, dict) or hasattr(p, 'keys') else p[1]
 
@@ -157,7 +176,6 @@ class TabLoja:
         self.check_ind_vars.clear()
         col, row = 0, 0
         for ind in industrias:
-            # Suporta dicionário/Row (ind['id']) ou tupla (ind[0])
             ind_id = ind['id'] if isinstance(ind, dict) or hasattr(ind, 'keys') else ind[0]
             nome = ind['nome'] if isinstance(ind, dict) or hasattr(ind, 'keys') else ind[1]
 
@@ -191,33 +209,37 @@ class TabLoja:
         linha = ctk.CTkFrame(self.scrollable_frame, fg_color=Cores.TRANSPARENTE)
         linha.pack(fill="x", pady=1)
 
-        linha.grid_columnconfigure(0, minsize=160, weight=0)
-        linha.grid_columnconfigure(1, minsize=110, weight=0)
-        linha.grid_columnconfigure(2, minsize=80, weight=0)
-        linha.grid_columnconfigure(3, weight=1)
+        linha.grid_columnconfigure(0, minsize=self.LARGURA_LOJA, weight=0)
+        linha.grid_columnconfigure(1, minsize=self.LARGURA_CIDADE, weight=0)
+        linha.grid_columnconfigure(2, minsize=self.LARGURA_INTERVALO, weight=0)
+        linha.grid_columnconfigure(3, minsize=self.LARGURA_PROMOTORES, weight=0)
         linha.grid_columnconfigure(4, weight=1)
-        linha.grid_columnconfigure(5, minsize=120, weight=0)
+        linha.grid_columnconfigure(5, minsize=self.LARGURA_ACOES, weight=0)
 
-        # LOJA (com Endereço em subtexto)
+        # LOJA (com Endereço em subtexto usando WrappableLabel para não estragar a largura se for longo)
         texto_loja = f"{nome}\n({endereco})" if endereco and endereco != "—" else nome
-        ctk.CTkLabel(linha, text=texto_loja, text_color=Cores.PRETO, anchor="w", wraplength=150, font=ctk.CTkFont(size=11)).grid(row=0, column=0, sticky="w", padx=10)
+        f_loja = ctk.CTkFrame(linha, fg_color=Cores.TRANSPARENTE)
+        f_loja.grid(row=0, column=0, sticky="nsew", padx=5, pady=2)
+        lbl_loja = WrappableLabel(master=f_loja, text=texto_loja, text_color=Cores.PRETO, fg_color=Cores.BRANCO, anchor="w", justify="left")
+        lbl_loja.pack(fill="both", expand=True)
         
         # CIDADE E INTERVALO
-        ctk.CTkLabel(linha, text=cidade, text_color=Cores.PRETO, anchor="w", font=ctk.CTkFont(size=11)).grid(row=0, column=1, sticky="w", padx=10)
-        ctk.CTkLabel(linha, text=intervalo, text_color=Cores.PRETO, anchor="w", font=ctk.CTkFont(size=11)).grid(row=0, column=2, sticky="w", padx=10)
+        ctk.CTkLabel(linha, text=cidade, text_color=Cores.PRETO, anchor="w", font=ctk.CTkFont(size=12)).grid(row=0, column=1, sticky="nw", padx=5, pady=2)
+        ctk.CTkLabel(linha, text=intervalo, text_color=Cores.PRETO, anchor="w", font=ctk.CTkFont(size=12)).grid(row=0, column=2, sticky="nw", padx=5, pady=2)
 
-        # PROMOTORES E INDÚSTRIAS (Importado de views.utils)
+        # PROMOTORES
         f_prom = ctk.CTkFrame(linha, fg_color=Cores.TRANSPARENTE)
-        f_prom.grid(row=0, column=3, sticky="nsew", padx=5)
-        lbl_p = WrappableLabel(f_prom, text=promotores_str, text_color=Cores.TEXTO_ESCURO, font=ctk.CTkFont(size=11))
+        f_prom.grid(row=0, column=3, sticky="nsew", padx=5, pady=2)
+        lbl_p = WrappableLabel(master=f_prom, text=promotores_str, text_color=Cores.PRETO, fg_color=Cores.BRANCO, anchor="w", justify="left")
         lbl_p.pack(fill="both", expand=True)
 
+        # INDÚSTRIAS
         f_ind = ctk.CTkFrame(linha, fg_color=Cores.TRANSPARENTE)
-        f_ind.grid(row=0, column=4, sticky="nsew", padx=5)
-        lbl_i = WrappableLabel(f_ind, text=industrias_str, text_color=Cores.TEXTO_ESCURO, font=ctk.CTkFont(size=11))
+        f_ind.grid(row=0, column=4, sticky="nsew", padx=5, pady=2)
+        lbl_i = WrappableLabel(master=f_ind, text=industrias_str, text_color=Cores.PRETO, fg_color=Cores.BRANCO, anchor="w", justify="left")
         lbl_i.pack(fill="both", expand=True)
 
-        # AÇÕES
+        # AÇÕES (completamente centralizados)
         frame_acoes = ctk.CTkFrame(linha, fg_color=Cores.TRANSPARENTE)
         frame_acoes.grid(row=0, column=5, sticky="e", padx=5)
 

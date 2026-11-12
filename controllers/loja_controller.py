@@ -138,14 +138,17 @@ class LojaController:
             # Formata a exibição do intervalo com a palavra 'dias'
             intervalo_str = f"{intervalo} dias"
 
+            prom_str = promotores.replace(",", ", ") if promotores else "—"
+            ind_str = industrias.replace(",", ", ") if industrias else "—"
+
             self.view.adicionar_linha(
                 id_loja=id_loja,
                 nome=nome,
                 cidade=cidade,
                 endereco=endereco or "—",
                 intervalo=intervalo_str,
-                promotores_str=promotores,
-                industrias_str=industrias,
+                promotores_str=prom_str,
+                industrias_str=ind_str,
                 cmd_editar=lambda i=id_loja, n=nome, c=cidade, e=endereco, interv=intervalo: self.preparar_edicao(i, n, c, e, interv),
                 cmd_excluir=lambda i=id_loja, n=nome: self.excluir(i, n)
             )
