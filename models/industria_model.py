@@ -38,3 +38,8 @@ class IndustriaModel:
         cursor = self.db.conn.cursor()
         cursor.execute("SELECT 1 FROM promotor_industria WHERE industria_id = ?", (ind_id,))
         return cursor.fetchone() is not None
+
+    def tem_vinculos_lojas(self, industria_id):
+        cursor = self.db.conn.cursor()
+        cursor.execute("SELECT 1 FROM loja_industria WHERE industria_id = ? LIMIT 1", (industria_id,))
+        return cursor.fetchone() is not None

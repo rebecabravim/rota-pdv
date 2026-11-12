@@ -49,12 +49,17 @@ class IndustriaController:
         self.view.btn_cancelar.pack_forget()
 
     def excluir(self, ind_id, nome_ind):
-
-        # Bloqueia exclusão se estiver em uso por promotores
         if self.model.tem_vinculos_promotores(ind_id):
             self.view.mostrar_mensagem(
                 "Operação Bloqueada", 
                 f"A indústria '{nome_ind}' não pode ser excluída porque possui promotores associados a ela.", 
+                "erro"
+            )
+            return
+        if self.model.tem_vinculos_lojas(ind_id):
+            self.view.mostrar_mensagem(
+                "Exclusão bloqueada",
+                f"Não é possível excluir a indústria '{nome_ind}' porque ela está associada a uma ou mais lojas.",
                 "erro"
             )
             return

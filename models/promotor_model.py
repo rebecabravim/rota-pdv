@@ -59,3 +59,8 @@ class PromotorModel:
             cursor.execute("SELECT id FROM promotores WHERE LOWER(nome) = LOWER(?)", (nome,))
         
         return cursor.fetchone() is not None
+
+    def tem_vinculo_lojas(self, promotor_id):
+        cursor = self.db.conn.cursor()
+        cursor.execute("SELECT 1 FROM loja_promotor WHERE promotor_id = ? LIMIT 1", (promotor_id,))
+        return cursor.fetchone() is not None

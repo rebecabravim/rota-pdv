@@ -71,6 +71,14 @@ class PromotorController:
         self.view.btn_cancelar.pack_forget()
 
     def excluir(self, prom_id, nome):
+        if self.model.tem_vinculo_lojas(prom_id):
+            self.view.mostrar_mensagem(
+                "Operação Bloqueada",
+                f"Não é possível excluir o promotor '{nome}' porque ele está associado a uma ou mais lojas.",
+                "erro"
+            )
+            return
+        
         if not tk.messagebox.askyesno("Confirmar", f"Deseja excluir o promotor '{nome}'?"):
             return
 
