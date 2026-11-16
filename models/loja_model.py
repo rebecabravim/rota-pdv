@@ -62,15 +62,15 @@ class LojaModel:
         """)
         return cursor.fetchall()
 
-    def buscar_promotores_vinculados(self, loja_id):
-        cursor = self.db.conn.cursor()
-        cursor.execute("SELECT promotor_id FROM loja_promotor WHERE loja_id = ?", (loja_id,))
-        return [row[0] for row in cursor.fetchall()]
+    # def buscar_promotores_vinculados(self, loja_id):
+    #     cursor = self.db.conn.cursor()
+    #     cursor.execute("SELECT promotor_id FROM loja_promotor WHERE loja_id = ?", (loja_id,))
+    #     return [row[0] for row in cursor.fetchall()]
 
-    def buscar_industrias_vinculadas(self, loja_id):
-        cursor = self.db.conn.cursor()
-        cursor.execute("SELECT industria_id FROM loja_industria WHERE loja_id = ?", (loja_id,))
-        return [row[0] for row in cursor.fetchall()]
+    # def buscar_industrias_vinculadas(self, loja_id):
+    #     cursor = self.db.conn.cursor()
+    #     cursor.execute("SELECT industria_id FROM loja_industria WHERE loja_id = ?", (loja_id,))
+    #     return [row[0] for row in cursor.fetchall()]
 
     def deletar(self, loja_id):
         cursor = self.db.conn.cursor()

@@ -66,4 +66,59 @@ class Database:
                 FOREIGN KEY (industria_id) REFERENCES industrias (id) ON DELETE CASCADE
             )
         """)
+
+        # Tabela de Roteiros (1 roteiro por promotor/dia)
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS roteiros (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                promotor_id INTEGER NOT NULL,
+                data TEXT NOT NULL,
+                criado_em TEXT DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE (promotor_id, data),
+                FOREIGN KEY (promotor_id) REFERENCES promotores (id) ON DELETE CASCADE
+            )
+        """)
+
+        # Tabela de Relacionamento N:N (Roteiro x Lojas Agendadas)
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS roteiro_lojas (
+                roteiro_id INTEGER NOT NULL,
+                loja_id INTEGER NOT NULL,
+                PRIMARY KEY (roteiro_id, loja_id),
+                FOREIGN KEY (roteiro_id) REFERENCES roteiros (id) ON DELETE CASCADE,
+                FOREIGN KEY (loja_id) REFERENCES lojas (id) ON DELETE CASCADE
+            )
+        """)
+
+        # Tabela de Visitas (Execução em campo)
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS visitas (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                roteiro_id INTEGER,
+                promotor_id INTEGER NOT NULL,
+                loja_id INTEGER NOT NULL,
+                data TEXT NOT NULL,
+                status TEXT NOT NULL,
+                obs_geral TEXT,
+                criado_em TEXT DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (roteiro_id) REFERENCES roteiros (id) ON DELETE SET NULL,
+                FOREIGN KEY (promotor_id) REFERENCES promotores (id) ON DELETE CASCADE,
+                FOREIGN KEY (loja_id) REFERENCES lojas (id) ON DELETE CASCADE
+            )
+        """)
+
+        # Tabela de Detalhe de Estoque por Indústria na Visita
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS visita_industrias (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                visita_id INTEGER NOT NULL,
+                industria_id INTEGER NOT NULL,
+                estoque TEXT NOT NULL,
+                obs TEXT,
+                FOREIGN KEY (visita_id) REFERENCES visitas (id) ON DELETE CASCADE,
+                FOREIGN KEY (industria_id) REFERENCES industrias (id) ON DELETE CASCADE
+            )
+        """)
+
+
         self.conn.commit()
