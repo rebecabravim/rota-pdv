@@ -62,19 +62,15 @@ class LojaModel:
         """)
         return cursor.fetchall()
 
-    # def buscar_promotores_vinculados(self, loja_id):
-    #     cursor = self.db.conn.cursor()
-    #     cursor.execute("SELECT promotor_id FROM loja_promotor WHERE loja_id = ?", (loja_id,))
-    #     return [row[0] for row in cursor.fetchall()]
-
-    # def buscar_industrias_vinculadas(self, loja_id):
-    #     cursor = self.db.conn.cursor()
-    #     cursor.execute("SELECT industria_id FROM loja_industria WHERE loja_id = ?", (loja_id,))
-    #     return [row[0] for row in cursor.fetchall()]
-
     def deletar(self, loja_id):
         cursor = self.db.conn.cursor()
         cursor.execute("DELETE FROM loja_promotor WHERE loja_id = ?", (loja_id,))
         cursor.execute("DELETE FROM loja_industria WHERE loja_id = ?", (loja_id,))
+        cursor.execute("DELETE FROM roteiro_lojas WHERE loja_id = ?", (loja_id,))
+        # Remove roteiros que ficaram vazios após a exclusão da loja
+        cursor.execute("""
+            DELETE FROM roteiros
+            WHERE id NOT IN (SELECT DISTINCT roteiro_id FROM roteiro_lojas)
+        """)
         cursor.execute("DELETE FROM lojas WHERE id = ?", (loja_id,))
         self.db.conn.commit()

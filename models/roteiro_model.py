@@ -58,10 +58,12 @@ class RoteiroModel:
 
     def buscar_lojas_vinculadas(self, roteiro_id):
         cursor = self.db.conn.cursor()
-        cursor.execute(
-            "SELECT loja_id FROM roteiro_lojas WHERE roteiro_id = ?",
-            (roteiro_id,)
-        )
+        cursor.execute("""
+            SELECT rl.loja_id
+            FROM roteiro_lojas rl
+            INNER JOIN lojas l ON l.id = rl.loja_id
+            WHERE rl.roteiro_id = ?
+        """, (roteiro_id,))
         return [row[0] for row in cursor.fetchall()]
 
     def buscar_todos(self, promotor_id=None, data_iso=None):
@@ -72,13 +74,14 @@ class RoteiroModel:
                 r.promotor_id,
                 p.nome AS promotor_nome,
                 r.data,
-                COUNT(DISTINCT rl.loja_id) AS total_lojas,
-                COUNT(DISTINCT CASE WHEN v.status = 'feita' THEN v.loja_id END) AS feitas,
-                COUNT(DISTINCT CASE WHEN v.status = 'nao_feita' THEN v.loja_id END) AS nao_feitas
+                COUNT(DISTINCT l.id) AS total_lojas,
+                COUNT(DISTINCT CASE WHEN v.status = 'feita' THEN l.id END) AS feitas,
+                COUNT(DISTINCT CASE WHEN v.status = 'nao_feita' THEN l.id END) AS nao_feitas
             FROM roteiros r
             INNER JOIN promotores p ON r.promotor_id = p.id
             LEFT JOIN roteiro_lojas rl ON r.id = rl.roteiro_id
-            LEFT JOIN visitas v ON r.id = v.roteiro_id AND rl.loja_id = v.loja_id
+            LEFT JOIN lojas l ON l.id = rl.loja_id
+            LEFT JOIN visitas v ON r.id = v.roteiro_id AND l.id = v.loja_id
             WHERE 1 = 1
         """
         params = []

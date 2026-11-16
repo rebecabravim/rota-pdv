@@ -211,11 +211,13 @@ class RoteiroController:
         lojas_vinculadas = set(self.model.buscar_lojas_vinculadas(r_id))
         self.lojas_valores_derivados_calculados = self.model.buscar_lojas_valores_derivados_calculados(promotor_id, data_iso)
 
+        ids_validos_promotor = {item["loja_id"] for item in self.lojas_valores_derivados_calculados}
+
         # Lojas que já tiveram visita baixada no dia ficam marcadas e travadas
         self.lojas_travadas_ids = {
             item["loja_id"] for item in self.lojas_valores_derivados_calculados if item["ja_registrada"]
         }
-        self.lojas_selecionadas_ids = lojas_vinculadas | self.lojas_travadas_ids
+        self.lojas_selecionadas_ids = (lojas_vinculadas & ids_validos_promotor) | self.lojas_travadas_ids
 
         self.view.entrar_modo_edicao(promotor_nome, data_br)
         self.aplicar_filtro_estoque()
