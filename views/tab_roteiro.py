@@ -13,11 +13,11 @@ class TabRoteiro:
 
         # Larguras fixas sincronizadas entre Cabeçalho e Linhas da Tabela Inferior
         self.LARGURA_PROMOTOR = 260
-        self.LARGURA_DATA = 130
+        self.LARGURA_DATA = 115
         self.LARGURA_LOJAS = 100
         self.LARGURA_FEITAS = 100
         self.LARGURA_NAO_FEITAS = 110
-        self.LARGURA_ACOES = 120
+        self.LARGURA_ACOES = 130
         self.PADDING_ACOES = 20
 
         # =====================================================================
@@ -204,6 +204,10 @@ class TabRoteiro:
         self.header.grid_columnconfigure(3, minsize=self.LARGURA_FEITAS, weight=0)
         self.header.grid_columnconfigure(4, minsize=self.LARGURA_NAO_FEITAS, weight=0)
         self.header.grid_columnconfigure(5, minsize=self.LARGURA_ACOES, weight=0)
+
+        # GAMBIARRA PRA ALINHAR TABELA, NAO TIRAR
+        debug_col2 = ctk.CTkFrame(self.header, fg_color=Cores.TRANSPARENTE, height=20, width=self.LARGURA_ACOES) # Se usar CustomTkinter, use ctk.CTkFrame(..., fg_color="red")
+        debug_col2.grid(row=0, column=5, sticky="nsew")
 
         ctk.CTkLabel(self.header, text="PROMOTOR", font=ctk.CTkFont(size=11, weight="bold"), text_color=Cores.AZUL_ESCURO).grid(row=0, column=0, sticky="w", padx=5, pady=2)
         ctk.CTkLabel(self.header, text="DATA", font=ctk.CTkFont(size=11, weight="bold"), text_color=Cores.AZUL_ESCURO).grid(row=0, column=1, sticky="w", padx=5, pady=2)
