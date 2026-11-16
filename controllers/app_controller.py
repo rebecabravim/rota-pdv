@@ -2,6 +2,7 @@ from controllers.industria_controller import IndustriaController
 from controllers.loja_controller import LojaController
 from controllers.promotor_controller import PromotorController
 from controllers.roteiro_controller import RoteiroController
+from controllers.visita_controller import VisitaController
 
 class AppController:
     def __init__(self, view, db):
@@ -12,6 +13,11 @@ class AppController:
         self.promotor_controller = PromotorController(self.view.tab_promotores, self.db)
         self.loja_controller = LojaController(self.view.tab_lojas, self.db)
         self.roteiro_controller = RoteiroController(self.view.tab_roteiros, self.db)
+        self.visita_controller = VisitaController(
+            self.view.tab_visitas,
+            self.db,
+            on_visita_alterada=self.roteiro_controller.atualizar_tabela
+        )
 
         # A nossa nova Navbar possui um método para injetarmos o comando de troca
         self.view.set_tab_command(self.ao_trocar_aba)
@@ -28,3 +34,7 @@ class AppController:
         elif texto_aba == "Roteiros":
             self.roteiro_controller.recarregar_opcoes()
             self.roteiro_controller.atualizar_tabela()
+
+        elif texto_aba == "Visitas":
+            self.visita_controller.recarregar_opcoes()
+            self.visita_controller.atualizar_tabela()

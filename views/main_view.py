@@ -4,6 +4,7 @@ from views.tab_industria import TabIndustria
 from views.tab_promotor import TabPromotor
 from views.tab_loja import TabLoja
 from views.tab_roteiro import TabRoteiro
+from views.tab_visita import TabVisita
 from views.styles import Cores
 
 
@@ -72,6 +73,13 @@ class MainView:
                 )
         self.btn_nav_roteiros.pack(side="left", padx=10)
 
+        self.btn_nav_visitas = ctk.CTkButton(
+            frame_menus, text="Visitas", fg_color="transparent", hover_color="#f8f9fa",
+            text_color=Cores.AZUL_ESCURO, font=ctk.CTkFont(size=13, weight="normal"), width=80,
+            command=lambda: self.selecionar_aba("Visitas")
+        )
+        self.btn_nav_visitas.pack(side="left", padx=10)
+
 
         # ==========================================
         # 2. ÁREA DE CONTEÚDO (Onde as abas aparecem)
@@ -84,12 +92,14 @@ class MainView:
         self.frame_promotores = ctk.CTkFrame(self.content_area, fg_color="transparent")
         self.frame_lojas = ctk.CTkFrame(self.content_area, fg_color="transparent")
         self.frame_roteiros = ctk.CTkFrame(self.content_area, fg_color="transparent")
+        self.frame_visitas = ctk.CTkFrame(self.content_area, fg_color="transparent")
         
         # Injetamos as views originais nestes frames
         self.tab_industrias = TabIndustria(self.frame_industrias)
         self.tab_promotores = TabPromotor(self.frame_promotores)
         self.tab_lojas = TabLoja(self.frame_lojas)
         self.tab_roteiros = TabRoteiro(self.frame_roteiros)
+        self.tab_visitas = TabVisita(self.frame_visitas)
 
         # Inicia a aplicação exibindo a primeira aba
         self.selecionar_aba("Indústrias")
@@ -104,6 +114,7 @@ class MainView:
         self.frame_promotores.pack_forget()
         self.frame_lojas.pack_forget()
         self.frame_roteiros.pack_forget()
+        self.frame_visitas.pack_forget()
 
         # 2. Reseta a cor e fonte de todos os botões do menu
         fonte_normal = ctk.CTkFont(size=13, weight="normal")
@@ -111,6 +122,7 @@ class MainView:
         self.btn_nav_prom.configure(text_color=Cores.AZUL_ESCURO, font=fonte_normal)
         self.btn_nav_lojas.configure(text_color=Cores.AZUL_ESCURO, font=fonte_normal)
         self.btn_nav_roteiros.configure(text_color=Cores.AZUL_ESCURO, font=fonte_normal)
+        self.btn_nav_visitas.configure(text_color=Cores.AZUL_ESCURO, font=fonte_normal)
 
         # 3. Exibe a tela correta e pinta o botão de Azul Médio e Negrito
         fonte_negrito = ctk.CTkFont(size=13, weight="bold")
@@ -130,6 +142,10 @@ class MainView:
         elif nome_aba == "Roteiros":
                     self.frame_roteiros.pack(fill="both", expand=True)
                     self.btn_nav_roteiros.configure(text_color=Cores.AZUL_MEDIO, font=fonte_negrito)
+
+        elif nome_aba == "Visitas":
+            self.frame_visitas.pack(fill="both", expand=True)
+            self.btn_nav_visitas.configure(text_color=Cores.AZUL_MEDIO, font=fonte_negrito)
 
         # 4. Avisa o AppController (para recarregar banco de dados, se necessário)
         if hasattr(self, 'tab_command'):
